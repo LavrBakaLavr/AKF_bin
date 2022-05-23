@@ -13,7 +13,7 @@ import numba
 
 line_lenght_min = 49
 line_lenght_max = 60
-best = 15
+best = 16
 
 start_time = time.time()
     
