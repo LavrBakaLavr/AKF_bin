@@ -43,7 +43,7 @@ def ak_func_demo(d_k, d_j, d_max_line, d_best, d_min, d_index_min):
             
         akf = abs(akf)
           
-        if (akf >= line_max) or (flag == 0 and d > 2):
+        if (akf >= line_max) or (flag == 0 and d > 5):
             d_max_line[row] = d_k[0]
             break
         else:
