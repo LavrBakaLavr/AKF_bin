@@ -11,9 +11,14 @@ from numba import cuda
 import warnings
 import numba
 
+cuda.select_device(0)
+f = open('akf_bin_47.txt', 'a')
+f.write("Старт вычислений. Начало: 47, шаг: 4, индекс GPU: 0")
+f.close()
+
 line_lenght_min = 47
 line_lenght_max = 60
-best = 15
+best = 16
 
 start_time = time.time()
     
@@ -22,7 +27,7 @@ def ak_func_demo(d_k, d_j, d_max_line, d_best, d_min, d_index_min):
     
     row = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     
-    m = row + d_j[0] * 2**31 # поправка на батчер (batch = max(0, k - 33)) по формуле d_j[0] * 2 ** [k старта батчера - 2]
+    m = row + d_j[0] * 2**32 # поправка на батчер (batch = max(0, k - 33)) по формуле d_j[0] * 2 ** [k старта батчера - 2]
     
     d_max_line[row][0] = 0
     d_max_line[row][1] = d_k[0]
@@ -43,7 +48,7 @@ def ak_func_demo(d_k, d_j, d_max_line, d_best, d_min, d_index_min):
             
         akf = abs(akf)
           
-        if (akf >= line_max) or (flag == 0 and d > 3):
+        if (akf >= line_max) or (flag == 0 and d > 5):
             d_max_line[row] = d_k[0]
             break
         else:
@@ -82,11 +87,10 @@ d_best = cuda.to_device(np.array([best], dtype=np.int8))
 
 for k in range(line_lenght_min, line_lenght_max + 1, 4): 
 
-    batch = max(0, k - 32)
+    batch = max(0, k - 33)
     
     batch_pow = pow(2, batch)
-    
-    #power = k - 3 - batch
+
     power = k - 1 - batch
         
     k_pow = pow(2, power)
@@ -132,7 +136,7 @@ for k in range(line_lenght_min, line_lenght_max + 1, 4):
                             \n{ k } / { optimal_amp } = { best_on_line } - Batch: { j+1 }/{ batch_pow }, { np.round((time.time() - start_time), 2) } sec\n'
     
             print (text_message)
-            f = open('akf_bin.txt', 'a')
+            f = open('akf_bin_47.txt', 'a')
             f.write(text_message)
             f.close()
             
