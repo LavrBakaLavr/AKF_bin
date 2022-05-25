@@ -18,7 +18,7 @@ f.close()
 
 line_lenght_min = 47
 line_lenght_max = 60
-best = 16
+best = 15
 
 start_time = time.time()
     
