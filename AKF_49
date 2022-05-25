@@ -27,7 +27,7 @@ def ak_func_demo(d_k, d_j, d_max_line, d_best, d_min, d_index_min):
     
     row = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     
-    m = row + d_j[0] * 2**32 # поправка на батчер (batch = max(0, k - 33)) по формуле d_j[0] * 2 ** [k старта батчера - 2]
+    m = row + d_j[0] * 2**31 # поправка на батчер (batch = max(0, k - 33)) по формуле d_j[0] * 2 ** [k старта батчера - 2]
     
     d_max_line[row][0] = 0
     d_max_line[row][1] = d_k[0]
@@ -87,7 +87,7 @@ d_best = cuda.to_device(np.array([best], dtype=np.int8))
 
 for k in range(line_lenght_min, line_lenght_max + 1, 4): 
 
-    batch = max(0, k - 33)
+    batch = max(0, k - 32)
     
     batch_pow = pow(2, batch)
 
@@ -129,7 +129,7 @@ for k in range(line_lenght_min, line_lenght_max + 1, 4):
         
             best_on_line = k/optimal_amp
             index_min = int(d_index_min.copy_to_host()[0])
-            optimal_line, optimal_akf = get_bin(index_min + j * 2**32, k)
+            optimal_line, optimal_akf = get_bin(index_min + j * 2**31, k)
             
             text_message = f'\n{ optimal_line } \
                             \n{ optimal_akf } \
