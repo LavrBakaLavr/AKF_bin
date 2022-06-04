@@ -16,7 +16,7 @@ f = open('akf_bin_49.txt', 'a')
 f.write("Старт вычислений. Начало: 49, шаг: 4, индекс GPU: 1")
 f.close()
 
-line_lenght_min = 48
+line_lenght_min = 49
 line_lenght_max = 95
 
 start_time = time.time()
