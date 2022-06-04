@@ -131,7 +131,7 @@ def get_bin(count, k):
 batch = 0
 tpb = cuda.get_current_device().WARP_SIZE
 
-for k in range(line_lenght_min, line_lenght_max + 1): 
+for k in range(line_lenght_min, line_lenght_max + 1, 4): 
 
     batch = max(0, k - 33)
     
